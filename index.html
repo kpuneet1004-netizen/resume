@@ -94,7 +94,7 @@ $('#selfTour').addEventListener('click',enterSelfTour);
 function interruptGuidedTour(reason){if(!guidedActive)return;guidedActive=false;userInterrupted=true;$('#selfTour').setAttribute('aria-pressed','true');$('#selfTour').textContent='Explore mode';statusText.textContent='Explore mode · '+reason;}
 $$('[data-jump]').forEach(b=>b.addEventListener('click',()=>go(b.dataset.jump)));
 document.addEventListener('click',e=>{if(!e.target.closest('#sectionMenu,#allSections,#openMenu'))closeMenu()});
-document.addEventListener('keydown',e=>{if(e.key==='Escape')closeMenu();if(['INPUT','TEXTAREA'].includes(document.activeElement.tagName))return;if(e.key==='PageDown'||e.key==='ArrowRight'){e.preventDefault();go(sections[Math.min(sections.length-1,current+1)].id)}if(e.key==='PageUp'||e.key==='ArrowLeft'){e.preventDefault();go(sections[Math.max(0,current-1)].id)}});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeMenu();if(['INPUT','TEXTAREA'].includes(document.activeElement.tagName))return;if(e.key==='PageDown'||e.key==='ArrowRight'){e.preventDefault();interruptGuidedTour('manual navigation');go(sections[Math.min(sections.length-1,current+1)].id)}if(e.key==='PageUp'||e.key==='ArrowLeft'){e.preventDefault();interruptGuidedTour('manual navigation');go(sections[Math.max(0,current-1)].id)}});
 $$('[data-copy]').forEach(b=>b.addEventListener('click',async()=>{const old=b.textContent;try{await navigator.clipboard.writeText(b.dataset.copy);b.textContent='COPIED ✓'}catch{b.textContent='COPY MANUALLY'}setTimeout(()=>b.textContent=old,1400)}));
 const portrait=$('#portraitImage');portrait.addEventListener('load',()=>{$('#portraitFallback').style.display='none';portrait.classList.add('loaded')});portrait.addEventListener('error',()=>{portrait.style.display='none'});
 function openAudio(){player.classList.add('open');audioError.classList.remove('show')}
@@ -110,6 +110,8 @@ audio.addEventListener('timeupdate',()=>{$('#audioProgress').value=audio.current
 $('#audioProgress').addEventListener('input',()=>{interruptGuidedTour('manual seek');audio.currentTime=Number($('#audioProgress').value)});
 audio.addEventListener('seeking',()=>interruptGuidedTour('manual seek'));
 addEventListener('scroll',()=>{if(guidedActive&&performance.now()>programmaticUntil)interruptGuidedTour('manual scroll')},{passive:true});
+addEventListener('wheel',()=>interruptGuidedTour('manual scroll'),{passive:true});
+addEventListener('touchmove',()=>interruptGuidedTour('manual scroll'),{passive:true});
 audio.addEventListener('error',()=>{audioError.classList.add('show');$('#audioStatus').textContent='Audio file unavailable in this deployment'});
 addEventListener('resize',()=>{if(active){clearActive();status.classList.remove('show')}},{passive:true});
 enterSelfTour();build(0);
