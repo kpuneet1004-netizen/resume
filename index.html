@@ -193,7 +193,6 @@ addEventListener('pointerdown',e=>{if(e.target.closest('a,button,[role=button]')
 addEventListener('scroll',()=>{if(programmatic)return;yieldControl();let best=0,d=Infinity;sections.forEach((s,i)=>{const n=Math.abs(s.getBoundingClientRect().top-70);if(n<d){d=n;best=i}});current=best},{passive:true});
 addEventListener('keydown',e=>{if(['INPUT','TEXTAREA'].includes(document.activeElement.tagName))return;if(e.key==='Escape'){yieldControl();$('#drawer').classList.remove('open')}});
 addEventListener('resize',cancel,{passive:true});
-sections.forEach(s=>setTimeout(()=>revealAll(s),3200));
 construct(0);
 })();
 </script>
