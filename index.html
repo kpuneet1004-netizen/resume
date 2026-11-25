@@ -50,7 +50,7 @@ main{padding:0 clamp(18px,5vw,76px)}.section{position:relative;min-height:100svh
 <div class="tour" id="tour"><button class="tour-play" id="tourPlay" aria-label="Play guided audio tour">▶</button><div class="tour-info"><strong>Guided Audio Tour</strong><small id="tourStatus">Puneet's professional journey · 03:22</small></div><div class="equalizer" aria-hidden="true"><i></i><i></i><i></i><i></i></div><button class="tour-close" id="tourClose" aria-label="Close audio tour">×</button><audio id="tourAudio" preload="none" src="assets/puneet-guided-tour.mp3"></audio></div>
 <script>
 (()=>{'use strict';
-const $=s=>document.querySelector(s),$=(s,root=document)=>[...root.querySelectorAll(s)],sections=$$('.section'),reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const $=s=>document.querySelector(s),$=(s,root=document)=>[...root.querySelectorAll(s)],sections=$('.section'),reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
 let current=0,drawerOpen=false,visited=new Set(),tourOpen=false;
 const agentNames=['Aibo','Kuro','Kohai','Nakama','All Might','Deku','Shiro','Yuzu','Tora','Sora','Senpai'];
 const colors=['#ff6b1a','#b7a4ff','#8de0a4','#ffad70'];
