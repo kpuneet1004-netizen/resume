@@ -50,43 +50,85 @@ main{padding:0 clamp(18px,5vw,76px)}.section{position:relative;min-height:100svh
 <div class="tour" id="tour"><button class="tour-play" id="tourPlay" aria-label="Play guided audio tour">▶</button><div class="tour-info"><strong>Guided Audio Tour</strong><small id="tourStatus">Puneet's professional journey · 03:22</small></div><div class="equalizer" aria-hidden="true"><i></i><i></i><i></i><i></i></div><button class="tour-close" id="tourClose" aria-label="Close audio tour">×</button><audio id="tourAudio" preload="none" src="assets/puneet-guided-tour.mp3"></audio></div>
 <script>
 (()=>{'use strict';
-const $=s=>document.querySelector(s),$=(s,root=document)=>[...root.querySelectorAll(s)],sections=$('.section'),reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
-let current=0,drawerOpen=false,visited=new Set(),tourOpen=false;
+const $=s=>document.querySelector(s);
+const $$=(s,root=document)=>[...root.querySelectorAll(s)];
+const sections=$$('.section');
+const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const agentNames=['Aibo','Kuro','Kohai','Nakama','All Might','Deku','Shiro','Yuzu','Tora','Sora','Senpai'];
 const colors=['#ff6b1a','#b7a4ff','#8de0a4','#ffad70'];
-const layer=$('#agentLayer'),dock=$('#agentDock');
-agentNames.forEach((n,i)=>{const el=document.createElement('span');el.textContent=n;dock.append(el)});
-function spark(x,y){const s=document.createElement('i');s.className='spark';s.style.left=x+'px';s.style.top=y+'px';layer.append(s);setTimeout(()=>s.remove(),500)}
-function construct(index){const section=sections[index];if(!section||visited.has(section.id)||reduced)return;visited.add(section.id);const cards=$$('.reveal',section);cards.forEach((el,i)=>{el.style.transitionDelay=(i*.08)+'s';setTimeout(()=>el.classList.add('in'),i*75)});section.classList.add('section-built');
-const chosen=[agentNames[(index*2)%11],agentNames[(index*2+3)%11],agentNames[(index*2+6)%11],agentNames[(index*2+9)%11]];
-const cursors=chosen.map((name,i)=>{const el=document.createElement('div');el.className='agent-cursor';el.innerHTML='<svg viewBox="0 0 22 28" fill="none"><path d="M2 1L19 17L11 18L8 26L2 1Z" fill="'+colors[i]+'" stroke="#0a0a0c" stroke-width="1.4"/></svg><span class="agent-label">'+name+'</span>';layer.append(el);return el});
-const targets=cards.slice(0,Math.max(4,Math.min(8,cards.length))).map(el=>{const r=el.getBoundingClientRect();return{x:Math.max(28,Math.min(innerWidth-28,r.left+r.width*(.2+Math.random()*.6)),y:Math.max(90,Math.min(innerHeight-90,r.top+r.height*(.2+Math.random()*.6)))}});
-targets.forEach((pt,i)=>{const el=cursors[i%cursors.length];setTimeout(()=>{el.classList.add('active');el.style.transition='left .5s cubic-bezier(.2,.75,.2,1),top .5s cubic-bezier(.2,.75,.2,1),opacity .25s';el.style.left=pt.x+'px';el.style.top=pt.y+'px';spark(pt.x,pt.y);const target=cards[i];if(target)target.classList.add('constructed')},i*190)});
-setTimeout(()=>{cursors.forEach((el,i)=>{el.style.left=(innerWidth+60+i*15)+'px';el.style.top=(innerHeight+40)+'px';el.classList.remove('active')});dock.classList.add('show');setTimeout(()=>{cursors.forEach(el=>el.remove());dock.classList.remove('show')},650)},targets.length*190+650);
+const layer=$('#agentLayer'),dock=$('#agentDock'),drawer=$('#drawer');
+let current=0,visited=new Set(),activeRun=null,raf=0,touchY=0;
+agentNames.forEach(name=>{const el=document.createElement('span');el.textContent=name;dock.append(el)});
+const clamp=(v,min,max)=>Math.max(min,Math.min(max,v));
+const ease=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;
+const point=(a,b,c,d,t)=>{const u=1-t;return{x:u*u*u*a.x+3*u*u*t*b.x+3*u*t*t*c.x+t*t*t*d.x,y:u*u*u*a.y+3*u*u*t*b.y+3*u*t*t*c.y+t*t*t*d.y}};
+function spark(x,y){const el=document.createElement('i');el.className='spark';el.style.left=x+'px';el.style.top=y+'px';layer.append(el);el.addEventListener('animationend',()=>el.remove(),{once:true});setTimeout(()=>el.remove(),700)}
+function makeCursor(name,color){const el=document.createElement('div');el.className='agent-cursor';el.setAttribute('aria-hidden','true');el.innerHTML='<svg viewBox="0 0 22 28" fill="none" focusable="false"><path d="M2 1L19 17L11 18L8 26L2 1Z" fill="'+color+'" stroke="#0a0a0c" stroke-width="1.4"/></svg><span class="agent-label">'+name+'</span>';layer.append(el);return el}
+function targetsFor(section){
+ const nodes=$$('.reveal',section).filter(el=>{const r=el.getBoundingClientRect();return r.width>0&&r.height>0});
+ const chosen=nodes.slice(0,8);
+ return chosen.map((el,i)=>{const r=el.getBoundingClientRect();return{x:clamp(r.left+r.width*(i%2?.72:.28),28,innerWidth-28),y:clamp(r.top+r.height*.28,85,innerHeight-85),node:el}});
 }
-function go(id){const idx=sections.findIndex(s=>s.id===id);if(idx<0)return;current=idx;sections[idx].scrollIntoView({behavior:reduced?'auto':'smooth',block:'start'});$('#drawer').classList.remove('open');drawerOpen=false;construct(idx)}
-function updateCurrent(){let best=0,dist=Infinity;sections.forEach((s,i)=>{const d=Math.abs(s.getBoundingClientRect().top);if(d<dist){dist=d;best=i}});if(best!==current){current=best;construct(best)}$('#nextSection').textContent=current===sections.length-1?'Back to Top ↑':'Next Section →'}
-const io=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('seen');const idx=sections.indexOf(e.target);if(idx>=0){current=idx;construct(idx);$('#nextSection').textContent=idx===sections.length-1?'Back to Top ↑':'Next Section →'}}}),{threshold:.18});
+function construct(index){
+ const section=sections[index];if(!section||visited.has(section.id))return;
+ visited.add(section.id);section.classList.add('section-built');
+ const cards=$$('.reveal',section);
+ cards.forEach((el,i)=>{el.style.transitionDelay=reduced?'0ms':Math.min(i*65,420)+'ms';el.classList.add('in')});
+ if(reduced||!layer)return;
+ if(activeRun){cancelAnimationFrame(activeRun.raf);activeRun.cursors.forEach(c=>c.remove());activeRun=null}
+ const crew=[agentNames[(index*2)%11],agentNames[(index*2+3)%11],agentNames[(index*2+6)%11],agentNames[(index*2+9)%11]];
+ const cursors=crew.map((name,i)=>makeCursor(name,colors[i]));
+ const targets=targetsFor(section);
+ if(!targets.length){cursors.forEach(c=>c.remove());return}
+ const t0=performance.now(),duration=1720;
+ const paths=cursors.map((_,i)=>{
+  const target=targets[Math.min(i,targets.length-1)];
+  const from={x:innerWidth*.18+(i%2)*innerWidth*.62,y:innerHeight+36+i*12};
+  const to={x:target.x,y:target.y};
+  const bend= i%2===0?1:-1;
+  return {from,b:{x:from.x+bend*90,y:from.y- innerHeight*.45},c:{x:to.x-bend*70,y:to.y+innerHeight*.25},to,target};
+ });
+ const run={cursors,raf:0};activeRun=run;
+ function frame(now){
+  const p=clamp((now-t0)/duration,0,1);
+  cursors.forEach((el,i)=>{
+   const delay=i*.11,local=clamp((p-delay)/(1-delay),0,1),q=ease(local),path=paths[i];
+   const pos=point(path.from,path.b,path.c,path.to,q);
+   el.style.left=pos.x+'px';el.style.top=pos.y+'px';el.classList.toggle('active',local<.94);
+   if(local>=.86&&!path.done){path.done=true;path.target.node.classList.add('constructed');spark(pos.x,pos.y)}
+  });
+  if(p<1){run.raf=requestAnimationFrame(frame);return}
+  cursors.forEach((el,i)=>{el.style.transition='left .36s cubic-bezier(.2,.75,.2,1),top .36s cubic-bezier(.2,.75,.2,1),opacity .25s';el.style.left=(innerWidth+80+i*18)+'px';el.style.top=(innerHeight+45)+'px';el.classList.remove('active')});
+  dock.classList.add('show');
+  setTimeout(()=>{cursors.forEach(el=>el.remove());dock.classList.remove('show');if(activeRun===run)activeRun=null},520);
+ }
+ run.raf=requestAnimationFrame(frame);
+}
+function updateCurrent(){let best=0,dist=Infinity;sections.forEach((s,i)=>{const d=Math.abs(s.getBoundingClientRect().top-76);if(d<dist){dist=d;best=i}});current=best;$('#nextSection').textContent=current===sections.length-1?'Back to Top ↑':'Next Section →'}
+function go(id){const idx=sections.findIndex(s=>s.id===id);if(idx<0)return;current=idx;sections[idx].scrollIntoView({behavior:reduced?'auto':'smooth',block:'start'});drawer.classList.remove('open');construct(idx);$('#nextSection').textContent=idx===sections.length-1?'Back to Top ↑':'Next Section →'}
+const io=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting){const idx=sections.indexOf(e.target);if(idx>=0){current=idx;construct(idx);$('#nextSection').textContent=idx===sections.length-1?'Back to Top ↑':'Next Section →'}}}),{threshold:.18});
 sections.forEach(s=>io.observe(s));
-$('#allSections').addEventListener('click',()=>$('#drawer').classList.toggle('open'));
-$('#closeDrawer').addEventListener('click',()=>$('#drawer').classList.remove('open'));
+$('#allSections').addEventListener('click',()=>drawer.classList.toggle('open'));
+$('#closeDrawer').addEventListener('click',()=>drawer.classList.remove('open'));
 $$('[data-jump]').forEach(b=>b.addEventListener('click',()=>go(b.dataset.jump)));
-$('#nextSection').addEventListener('click',()=>go(sections[(current+1)%sections.length].id));
-document.addEventListener('click',e=>{if(!e.target.closest('#drawer,#allSections')&&$('#drawer').classList.contains('open'))$('#drawer').classList.remove('open')});
-$$('[data-copy]').forEach(b=>b.addEventListener('click',async()=>{const old=b.textContent;try{await navigator.clipboard.writeText(b.dataset.copy);b.textContent='Copied ✓'}catch{b.textContent=b.dataset.copy;b.title='Select and copy'}setTimeout(()=>b.textContent=old,1500)}));
+$('#nextSection').addEventListener('click',()=>go(sections[current===sections.length-1?0:current+1].id));
+document.addEventListener('click',e=>{if(!e.target.closest('#drawer,#allSections'))drawer.classList.remove('open')});
+$$('[data-copy]').forEach(b=>b.addEventListener('click',async()=>{const old=b.textContent;try{await navigator.clipboard.writeText(b.dataset.copy);b.textContent='Copied ✓'}catch{b.textContent='Copy manually';}setTimeout(()=>b.textContent=old,1500)}));
 const audio=$('#tourAudio'),tour=$('#tour');
-function showTour(){tour.classList.add('show');tourOpen=true}
-$('#startTour').addEventListener('click',()=>{showTour();audio.play().catch(()=>{$('#tourStatus').textContent='Tap play to start · 03:22'})});
-$('#tourPlay').addEventListener('click',()=>{showTour();if(audio.paused)audio.play();else audio.pause()});
-$('#tourClose').addEventListener('click',()=>{audio.pause();tour.classList.remove('show');tourOpen=false});
+$('#startTour').addEventListener('click',()=>{tour.classList.add('show');audio.play().catch(()=>{$('#tourStatus').textContent='Tap play to start · 03:22'})});
+$('#tourPlay').addEventListener('click',()=>{tour.classList.add('show');if(audio.paused)audio.play().catch(()=>{});else audio.pause()});
+$('#tourClose').addEventListener('click',()=>{audio.pause();tour.classList.remove('show')});
 audio.addEventListener('play',()=>{$('#tourPlay').textContent='Ⅱ';tour.classList.add('playing');$('#tourStatus').textContent='Now playing · Puneet’s journey'});
 audio.addEventListener('pause',()=>{$('#tourPlay').textContent='▶';tour.classList.remove('playing');if(!audio.ended)$('#tourStatus').textContent='Paused · Guided audio tour'});
 audio.addEventListener('ended',()=>{$('#tourStatus').textContent='Tour complete · Replay anytime'});
-const chapters=[0,15,40,95,127,164];
-audio.addEventListener('timeupdate',()=>{const t=audio.currentTime;let idx=chapters.length-1;for(let i=0;i<chapters.length;i++)if(t<chapters[i]){idx=Math.max(0,i-1);break}const id=['welcome','intro','experience','education','venture','contact'][idx];if(!audio.paused&&sections[current]?.id!==id){const target=sections.findIndex(s=>s.id===id);if(target>=0&&Math.abs(sections[target].getBoundingClientRect().top)>innerHeight*.5){current=target;sections[target].scrollIntoView({behavior:'smooth',block:'start'});construct(target)}}});
-addEventListener('keydown',e=>{if(['INPUT','TEXTAREA'].includes(document.activeElement.tagName))return;if(e.key==='Escape')$('#drawer').classList.remove('open');if(['ArrowRight','PageDown'].includes(e.key)){e.preventDefault();go(sections[Math.min(sections.length-1,current+1)].id)}if(['ArrowLeft','PageUp'].includes(e.key)){e.preventDefault();go(sections[Math.max(0,current-1)].id)}});
-let touchY=0;addEventListener('touchstart',e=>touchY=e.changedTouches[0].screenY,{passive:true});addEventListener('touchend',e=>{const delta=touchY-e.changedTouches[0].screenY;if(Math.abs(delta)>100&&innerWidth>768){go(sections[Math.max(0,Math.min(sections.length-1,current+(delta>0?1:-1)))].id)}},{passive:true});
-construct(0);$$('.reveal').forEach(el=>{if(el.getBoundingClientRect().top<innerHeight)el.classList.add('in')});
+const chapters=[0,15,40,95,127,164],chapterIds=['welcome','intro','experience','education','venture','contact'];let lastChapter=-1;
+audio.addEventListener('timeupdate',()=>{if(audio.paused)return;let idx=0;for(let i=0;i<chapters.length;i++)if(audio.currentTime>=chapters[i])idx=i;if(idx!==lastChapter){lastChapter=idx;const target=sections.findIndex(s=>s.id===chapterIds[idx]);if(target>=0){current=target;sections[target].scrollIntoView({behavior:reduced?'auto':'smooth',block:'start'});construct(target)}}});
+audio.addEventListener('seeked',()=>{lastChapter=-1});
+document.addEventListener('keydown',e=>{if(['INPUT','TEXTAREA'].includes(document.activeElement.tagName))return;if(e.key==='Escape')drawer.classList.remove('open');if(['ArrowRight','PageDown'].includes(e.key)){e.preventDefault();go(sections[Math.min(sections.length-1,current+1)].id)}if(['ArrowLeft','PageUp'].includes(e.key)){e.preventDefault();go(sections[Math.max(0,current-1)].id)}});
+addEventListener('touchstart',e=>touchY=e.changedTouches[0].screenY,{passive:true});
+addEventListener('touchend',e=>{const delta=touchY-e.changedTouches[0].screenY;if(Math.abs(delta)>100&&innerWidth>768)go(sections[clamp(current+(delta>0?1:-1),0,sections.length-1)].id)},{passive:true});
+addEventListener('scroll',()=>{if(!raf){raf=requestAnimationFrame(()=>{updateCurrent();raf=0})}},{passive:true});
+construct(0);$$('.welcome .reveal').forEach(el=>el.classList.add('in'));
 })();
 </script>
 </body></html>
