@@ -205,9 +205,9 @@ function startAtWelcome(){
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',startAtWelcome,{once:true});
 else startAtWelcome();
-window.addEventListener('load',()=>{if(current===0&&scrollY<80)construct(0)},{once:true});
-// Global hard stop: even a missed observer, cancelled animation, or failed cursor
-// must never leave any section or reveal target at opacity zero.
+// The DOMContentLoaded boot above is the only initial construction trigger.
+// Do not restart the animation on window.load (late fonts/media can fire much later).
+// Global hard stop: force every target visible within 1.1s, independent of observers.
 setTimeout(()=>sections.forEach(revealAll),1100);
 })();
 </script>
