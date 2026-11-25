@@ -39,13 +39,33 @@ main{padding:0 clamp(18px,5vw,76px)}.section{position:relative;min-height:100svh
 .reveal.constructed{box-shadow:0 0 0 1px #ff6b1a30,0 12px 38px #0005}
 .job.tour-focus{border-color:#ff6b1a99;box-shadow:0 0 0 1px #ff6b1a55,0 18px 55px #ff6b1a12}
 @media(prefers-reduced-motion:reduce){.agent-layer,.agent-dock{display:none!important}.reveal{opacity:1!important;transform:none!important}}
+
+/* Final micro-agent visual pass */
+.welcome .hero-orbit{display:none!important}
+.agent-dock{display:none!important}
+.agent-cursor{position:fixed;z-index:27;left:-40px;top:-40px;opacity:0;pointer-events:none;transition:left .42s cubic-bezier(.2,.75,.2,1),top .42s cubic-bezier(.2,.75,.2,1),opacity .18s ease}
+.agent-cursor.active{opacity:1}
+.agent-label{left:14px;top:12px;background:#17171b;border:1px solid #ff6b1a55;color:#f5f3f0}
+.construction-line{position:fixed;inset:0;width:100vw;height:100vh;overflow:visible;pointer-events:none;z-index:26;opacity:1;transition:opacity .28s ease}
+.construction-line.sweep-fade{opacity:0}
+.construction-line path{transition:stroke-dashoffset .35s cubic-bezier(.2,.75,.2,1)}
+.reveal{opacity:1;transform:none;transition:opacity .3s ease,transform .3s ease}
+.reveal.building{opacity:0!important;transform:translateY(10px)!important}
+.reveal.building.in{opacity:1!important;transform:none!important}
+.reveal.constructed{box-shadow:none!important}
+.section-built .reveal{opacity:1;transform:none}
+.spark{z-index:28}
+.footer{padding-bottom:128px}
+.floating-nav{bottom:max(20px,env(safe-area-inset-bottom))}
+@media(max-width:768px){.footer{padding-bottom:124px}.floating-nav{bottom:max(14px,env(safe-area-inset-bottom))}}
+@media(prefers-reduced-motion:reduce){.agent-layer,.agent-dock{display:none!important}.reveal,.reveal.building{opacity:1!important;transform:none!important}}
 </style>
 </head>
 <body>
 <header class="topbar"><a class="brand" href="#welcome" aria-label="Puneet resume home"><span class="monogram">P.</span><span>PUNEET RESUME</span></a><div class="availability"><i></i> Open for opportunities</div></header>
 <div class="agent-layer" id="agentLayer" aria-hidden="true"></div><div class="agent-dock" id="agentDock" aria-hidden="true"></div>
 <main>
-<section class="section welcome" id="welcome" data-title="Welcome"><div class="hero-orbit"><i class="orbit-dot"></i></div><div class="section-inner"><div class="hero-kicker reveal">K PUNEET CHANGAPPA <span style="color:#777">/ 2026</span></div><h1 class="reveal">People first.<br><span style="color:var(--orange)">Progress</span> always.</h1><p class="hero-copy reveal">Customer experience, CRM operations and business development — connecting people, processes and opportunities across markets.</p><div class="hero-bottom reveal"><a class="btn btn-primary" href="#intro">Explore Resume <span>↗</span></a><button class="btn btn-quiet" id="startTour">▷ &nbsp; Guided Audio Tour</button></div></div><div class="hero-meta"><span>Business Development · CRM Operations</span><span>Scroll to explore ↓</span></div></section>
+<section class="section welcome" id="welcome" data-title="Welcome"><div class="section-inner"><div class="hero-kicker reveal">K PUNEET CHANGAPPA <span style="color:#777">/ 2026</span></div><h1 class="reveal">People first.<br><span style="color:var(--orange)">Progress</span> always.</h1><p class="hero-copy reveal">Customer experience, CRM operations and business development — connecting people, processes and opportunities across markets.</p><div class="hero-bottom reveal"><a class="btn btn-primary" href="#intro">Explore Resume <span>↗</span></a><button class="btn btn-quiet" id="startTour">▷ &nbsp; Guided Audio Tour</button></div></div><div class="hero-meta"><span>Business Development · CRM Operations</span><span>Scroll to explore ↓</span></div></section>
 <section class="section" id="intro" data-title="Introduction"><div class="section-inner"><div class="section-head reveal"><div><div class="eyebrow">02 — INTRODUCTION</div><h2>A little about me.</h2></div><div class="section-number">01 / 06</div></div><div class="intro-grid"><article class="panel profile-card reveal"><div><div class="portrait-wrap"><img src="assets/profile-image.png" alt="Portrait of K Puneet Changappa"></div><h2>Hi, I’m Puneet.</h2><p class="bio">A customer-focused professional with 2.5+ years across customer service, business development and CRM operations. Experienced in working with teams and customers across India, USA, UAE and Canada.</p><span class="joiner">⚡ IMMEDIATE JOINER</span></div><nav class="orbit-links" aria-label="Explore sections"><a href="#experience">Experience</a><a href="#education">Education</a><a href="#venture">Venture</a><a href="#contact">Contact</a></nav></article><div class="metrics"><article class="panel metric reveal"><span>Experience</span><strong>2.5+ yrs</strong><p>CS, CRM &amp; Pre-Sales</p></article><article class="panel metric reveal"><span>Industry range</span><strong>3 Domains</strong><p>EdTech, FinTech &amp; Retail</p></article><article class="panel metric reveal"><span>Market exposure</span><strong>4 Markets</strong><p>India, US, UAE &amp; Canada</p></article><article class="panel metric reveal"><span>Career growth</span><strong>3 Mo Jump</strong><p>Promoted from frontline to corporate CRM</p></article></div></div></div></section>
 <section class="section" id="experience" data-title="Experience"><div class="section-inner"><div class="section-head reveal"><div><div class="eyebrow">03 — EXPERIENCE</div><h2>Professional journey.</h2></div><div class="section-number">02 / 06</div></div><div class="experience-grid">
 <article class="panel job reveal"><div class="job-top"><span class="job-index">01 / HELLO MENTOR</span><span class="job-date">FEB 2026 — AUG 2026</span></div><div class="role">Education Technology &amp; Pre-Sales</div><h3>Business Development Executive</h3><div class="company">Hello Mentor Pvt. Ltd.</div><ul><li>Qualified NEET aspirants and parents through outbound calls, communicating programme value and handling objections to drive webinar registrations.</li><li>Improved webinar attendance through structured follow-ups, timely reminders and commitment-based closing.</li><li>Met daily and weekly pipeline targets while maintaining accurate CRM records and handing high-intent leads to sales.</li></ul><div class="tagline">LEAD QUALIFICATION · CRM PIPELINE</div></article>
@@ -62,188 +82,118 @@ main{padding:0 clamp(18px,5vw,76px)}.section{position:relative;min-height:100svh
 <div class="tour" id="tour"><button class="tour-play" id="tourPlay" aria-label="Play guided audio tour">▶</button><div class="tour-info"><strong>Guided Audio Tour</strong><small id="tourStatus">Puneet's professional journey · 03:22</small></div><div class="equalizer" aria-hidden="true"><i></i><i></i><i></i><i></i></div><button class="tour-close" id="tourClose" aria-label="Close audio tour">×</button><audio id="tourAudio" preload="none" src="assets/puneet-guided-tour.mp3"></audio></div>
  <script>
 (()=>{'use strict';
-const $=s=>document.querySelector(s);
-const $$=(s,root=document)=>[...root.querySelectorAll(s)];
-const sections=$$('.section');
+const $=s=>document.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const sections=$$('.section'), layer=$('#agentLayer'), audio=$('#tourAudio'), tour=$('#tour');
 const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
-const agentNames=['Aibo','Kuro','Kohai','Nakama','All Might','Deku','Shiro','Yuzu','Tora','Sora','Senpai'];
-const agentRoles={
- Aibo:'systems & structure',Kuro:'interaction logic',Kohai:'visual direction',Nakama:'experience flow',
- 'All Might':'hero & impact',Deku:'content & detail',Shiro:'clarity & polish',Yuzu:'motion & transitions',
- Tora:'experience cards',Sora:'education & skills',Senpai:'final review'
-};
-const sectionCrews={
- welcome:['All Might','Kohai','Aibo','Senpai'],
- intro:['Deku','Shiro','Yuzu','Nakama'],
- experience:['Tora','Aibo','Kuro','Deku'],
- education:['Sora','Shiro','Kohai'],
- venture:['Nakama','Yuzu','All Might','Aibo'],
- contact:['Senpai','Kuro','Shiro','Nakama']
-};
-const palette=['#ff6b1a','#b7a4ff','#8de0a4','#ffad70'];
-const layer=$('#agentLayer'),dock=$('#agentDock');
-let current=0, userHasControl=false, programmaticScroll=false, programmaticTimer=0;
-let activeBuild=null, buildToken=0, tourDriving=false, lastCue=-1;
-const audio=$('#tourAudio'),tour=$('#tour');
-const cuePlan=[
- {time:0,section:'welcome'},
- {time:15,section:'intro'},
- {time:40,section:'experience',card:2},
- {time:55,section:'experience',card:1},
- {time:80,section:'experience',card:0},
- {time:97,section:'education'},
- {time:130,section:'venture'},
- {time:164,section:'contact'}
-];
-const reducedMotion=()=>reduced||!layer;
-function markVisible(section){
- if(!section)return;
- section.classList.add('section-built');
- $$('.reveal',section).forEach(el=>{el.classList.add('in');el.style.opacity='1';el.style.transform='none';el.style.transitionDelay='0ms'});
-}
-function setProgrammaticScroll(){programmaticScroll=true;clearTimeout(programmaticTimer);programmaticTimer=setTimeout(()=>programmaticScroll=false,1100)}
-function stopConstruction(){
- buildToken++;
- if(activeBuild){activeBuild.forEach(el=>el.remove());activeBuild=null}
- layer.querySelectorAll('.spark,.construction-line').forEach(el=>el.remove());
-}
-function spark(x,y){
- const s=document.createElement('i');s.className='spark';s.style.left=x+'px';s.style.top=y+'px';layer.append(s);
- s.addEventListener('animationend',()=>s.remove(),{once:true});setTimeout(()=>s.remove(),650);
-}
-function cursorFor(name,index){
- const el=document.createElement('div');el.className='agent-cursor';el.setAttribute('aria-hidden','true');
- const label=document.createElement('span');label.className='agent-label';label.textContent=name+' · '+agentRoles[name];
+const names=['Aibo','Kuro','Kohai','Nakama','All Might','Deku','Shiro','Yuzu','Tora','Sora','Senpai'];
+const roles={Aibo:'systems & structure',Kuro:'interaction logic',Kohai:'visual direction',Nakama:'experience flow','All Might':'hero & impact',Deku:'content & detail',Shiro:'clarity & polish',Yuzu:'motion & transitions',Tora:'experience cards',Sora:'education & skills',Senpai:'final review'};
+const crews={welcome:['All Might','Kohai','Aibo','Senpai'],intro:['Deku','Shiro','Yuzu','Nakama'],experience:['Tora','Aibo','Kuro','Deku'],education:['Sora','Shiro','Kohai'],venture:['Nakama','Yuzu','All Might','Aibo'],contact:['Senpai','Kuro','Shiro','Nakama']};
+const colors=['#ff6b1a','#b7a4ff','#8de0a4','#ffad70'];
+const cues=[{time:0,section:'welcome'},{time:15,section:'intro'},{time:40,section:'experience',card:2},{time:55,section:'experience',card:1},{time:80,section:'experience',card:0},{time:97,section:'education'},{time:130,section:'venture'},{time:164,section:'contact'}];
+let current=0, token=0, active=[], tourDriving=false, userControl=false, lastCue=-1, programmatic=false, programmaticTimer;
+const built=new WeakSet();
+const revealAll=section=>{$$('.reveal',section).forEach(el=>{el.classList.remove('building');el.classList.add('in');el.style.opacity='1';el.style.transform='none'})};
+function cursor(name,i){
+ const el=document.createElement('div');el.className='agent-cursor';el.setAttribute('aria-hidden','true');el.title=name+' · '+roles[name];
+ const label=document.createElement('span');label.className='agent-label';label.textContent=name;
  const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');svg.setAttribute('viewBox','0 0 22 28');
- svg.innerHTML='<path d="M2 1L19 17L11 18L8 26L2 1Z" fill="'+palette[index%palette.length]+'" stroke="#0a0a0c" stroke-width="1.4"/>';
+ svg.innerHTML='<path d="M2 1L19 17L11 18L8 26L2 1Z" fill="'+colors[i%4]+'" stroke="#09090b" stroke-width="1.4"/>';
  el.append(svg,label);layer.append(el);return el;
 }
-function pointFor(element,index){
- const r=element.getBoundingClientRect();
- const offsets=[[.16,.18],[.82,.2],[.78,.82],[.18,.78],[.5,.08],[.5,.92]];
- const o=offsets[index%offsets.length];
- return {x:Math.max(22,Math.min(innerWidth-22,r.left+r.width*o[0])),y:Math.max(82,Math.min(innerHeight-82,r.top+r.height*o[1]))};
-}
-function drawWireframe(element,token){
- const r=element.getBoundingClientRect();if(!r.width||!r.height)return;
- const x=Math.max(8,r.left),y=Math.max(74,r.top),w=Math.min(innerWidth-16,r.right)-x,h=Math.min(innerHeight-82,r.bottom)-y;
- if(w<12||h<12)return;
+function sweep(el,run){
+ const r=el.getBoundingClientRect();if(!r.width||!r.height)return null;
  const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');
  svg.setAttribute('class','construction-line');svg.setAttribute('viewBox','0 0 '+innerWidth+' '+innerHeight);
- svg.setAttribute('preserveAspectRatio','none');
- svg.style.cssText='position:fixed;inset:0;width:100vw;height:100vh;overflow:visible;pointer-events:none;z-index:1';
  const path=document.createElementNS('http://www.w3.org/2000/svg','path');
- const d='M '+x+' '+y+' C '+(x+w*.28)+' '+(y-8)+' '+(x+w*.72)+' '+(y-8)+' '+(x+w)+' '+y+' L '+(x+w)+' '+(y+h)+' C '+(x+w*.72)+' '+(y+h+8)+' '+(x+w*.28)+' '+(y+h+8)+' '+x+' '+(y+h)+' Z';
- path.setAttribute('d',d);path.setAttribute('fill','none');path.setAttribute('stroke','#ff6b1a');path.setAttribute('stroke-width','1');path.setAttribute('stroke-opacity','.8');path.setAttribute('stroke-dasharray','8 7');
- const length=path.getTotalLength();path.style.strokeDasharray=String(length);path.style.strokeDashoffset=String(length);path.style.transition='stroke-dashoffset 650ms cubic-bezier(.2,.75,.2,1)';
- svg.append(path);layer.append(svg);requestAnimationFrame(()=>{if(token===buildToken)path.style.strokeDashoffset='0'});
- setTimeout(()=>svg.remove(),1050);
+ const x=Math.max(4,r.left),y=Math.max(4,r.top),w=Math.min(innerWidth-4,r.right)-x,h=Math.min(innerHeight-4,r.bottom)-y;
+ if(w<8||h<8)return null;
+ const d='M '+x+' '+y+' L '+(x+w)+' '+y+' L '+(x+w)+' '+(y+h)+' L '+x+' '+(y+h)+' Z';
+ path.setAttribute('d',d);path.setAttribute('fill','none');path.setAttribute('stroke','#ff6b1a');path.setAttribute('stroke-width','1.4');path.setAttribute('stroke-linejoin','round');
+ const len=path.getTotalLength();path.style.strokeDasharray=len;path.style.strokeDashoffset=len;
+ svg.append(path);layer.append(svg);
+ requestAnimationFrame(()=>{if(run===token){path.style.strokeDashoffset='0';svg.classList.add('sweep-active')}});
+ setTimeout(()=>svg.classList.add('sweep-fade'),350);
+ setTimeout(()=>svg.remove(),650);
+ return {x:r.left+r.width*.5,y:r.top+r.height*.5};
 }
-function construct(index,options={}){
+function cancel(){
+ token++;active.forEach(c=>c.remove());active=[];
+ layer.querySelectorAll('.construction-line,.spark').forEach(n=>n.remove());
+}
+function construct(index,opts={}){
  const section=sections[index];if(!section)return;
- markVisible(section);
- if(reducedMotion()){section.classList.add('section-built');return}
- stopConstruction();const token=buildToken;const crew=options.crew||sectionCrews[section.id]||agentNames.slice(0,4);
- const elements=options.targets||$$('.reveal',section).filter(el=>el.getBoundingClientRect().width>0);
- const targets=elements.slice(0,Math.max(1,Math.min(8,elements.length)));
- if(!targets.length)return;
- const cursors=crew.slice(0,4).map((name,i)=>cursorFor(name,i));activeBuild=cursors;
- dock.innerHTML='';
- crew.forEach(name=>{const chip=document.createElement('span');chip.textContent=name;chip.title=agentRoles[name];dock.append(chip)});
- dock.classList.add('show');
- targets.forEach((target,i)=>{
-  const cursor=cursors[i%cursors.length];const p=pointFor(target,i);
+ if(reduced){revealAll(section);return}
+ cancel();const run=token, crew=opts.crew||crews[section.id]||names.slice(0,4);
+ const targets=(opts.targets||$$('.reveal',section)).filter(el=>el.getBoundingClientRect().width>0).slice(0,6);
+ if(!targets.length){revealAll(section);return}
+ const cursors=crew.slice(0,4).map(cursor);active=cursors;
+ targets.forEach((el,i)=>{
+  el.classList.remove('in');el.classList.add('building');el.style.opacity='0';el.style.transform='translateY(10px)';
+  const c=cursors[i%cursors.length];
   setTimeout(()=>{
-   if(token!==buildToken)return;
-   cursor.classList.add('active');cursor.style.left=p.x+'px';cursor.style.top=p.y+'px';
-   drawWireframe(target,token);spark(p.x,p.y);target.classList.add('constructed');
-  },i*135);
+   if(run!==token)return;
+   const p=sweep(el,run);if(p){c.classList.add('active');c.style.left=p.x+'px';c.style.top=p.y+'px'}
+   el.classList.add('in');el.style.opacity='1';el.style.transform='none';
+   const spark=document.createElement('i');spark.className='spark';spark.style.left=(p?.x||0)+'px';spark.style.top=(p?.y||0)+'px';layer.append(spark);setTimeout(()=>spark.remove(),500);
+  },i*190);
  });
- const duration=targets.length*135+520;
+ const total=(targets.length-1)*190+350;
  setTimeout(()=>{
-  if(token!==buildToken)return;
-  cursors.forEach((cursor,i)=>{
-   cursor.style.left=(innerWidth+45+i*18)+'px';cursor.style.top=(innerHeight+30)+'px';
-   cursor.classList.remove('active');
-  });
-  setTimeout(()=>{if(token!==buildToken)return;cursors.forEach(c=>c.remove());activeBuild=null;dock.classList.remove('show')},550);
- },duration);
+  if(run!==token)return;
+  cursors.forEach((c,i)=>{c.style.left=(innerWidth+60+i*18)+'px';c.style.top=(innerHeight+40)+'px';c.classList.remove('active')});
+  setTimeout(()=>{if(run!==token)return;cursors.forEach(c=>c.remove());active=[]},420);
+ },total);
+ // Hard visibility fallback for elements outside the choreography or a failed animation.
+ setTimeout(()=>{if(run===token)revealAll(section)},2600);
+ built.add(section);
 }
-function go(id,source='navigation'){
- const idx=sections.findIndex(s=>s.id===id);if(idx<0)return;
- if(source!=='tour')yieldToUser();
- current=idx;setProgrammaticScroll();
- sections[idx].scrollIntoView({behavior:reduced?'auto':'smooth',block:'start'});
- construct(idx);
- $('#drawer').classList.remove('open');
- $('#nextSection').textContent=idx===sections.length-1?'Back to Top ↑':'Next Section →';
+function yieldControl(){userControl=true;tourDriving=false;cancel()}
+function setProgrammatic(){programmatic=true;clearTimeout(programmaticTimer);programmaticTimer=setTimeout(()=>programmatic=false,1000)}
+function go(id,fromTour=false){
+ const i=sections.findIndex(s=>s.id===id);if(i<0)return;
+ if(!fromTour)yieldControl();current=i;setProgrammatic();sections[i].scrollIntoView({behavior:reduced?'auto':'smooth',block:'start'});
+ construct(i);$('#drawer')?.classList.remove('open');
 }
-function yieldToUser(){
- userHasControl=true;tourDriving=false;stopConstruction();
- // Narration continues, but it no longer moves the viewport or steals focus.
-}
-function currentSection(){
- let best=0,dist=Infinity;
- sections.forEach((s,i)=>{const d=Math.abs(s.getBoundingClientRect().top-76);if(d<dist){dist=d;best=i}});
- return best;
-}
-function updateCurrent(){
- current=currentSection();
- $('#nextSection').textContent=current===sections.length-1?'Back to Top ↑':'Next Section →';
-}
-function cueAt(time){
- let cue=cuePlan[0];for(const item of cuePlan){if(time>=item.time)cue=item;else break}return cue;
-}
-function runCue(cue){
- const sectionIndex=sections.findIndex(s=>s.id===cue.section);if(sectionIndex<0)return;
- current=sectionIndex;const section=sections[sectionIndex];
- if(cue.card!==undefined){
-  const jobs=$$('.job',section);const card=jobs[cue.card];
-  if(card){construct(sectionIndex,{targets:[card],crew:sectionCrews.experience});card.classList.add('tour-focus');jobs.forEach((job,i)=>{if(i!==cue.card)job.classList.remove('tour-focus')})}
- }else{
-  $$('.job',section).forEach(job=>job.classList.remove('tour-focus'));
-  construct(sectionIndex);
- }
- setProgrammaticScroll();section.scrollIntoView({behavior:reduced?'auto':'smooth',block:'start'});
+function cueAt(t){let c=cues[0];for(const x of cues){if(t>=x.time)c=x;else break}return c}
+function runCue(c){
+ const i=sections.findIndex(s=>s.id===c.section);if(i<0)return;current=i;
+ if(c.card!==undefined){
+  const cards=$$('.job',sections[i]),card=cards[c.card];
+  if(card){construct(i,{targets:[card],crew:crews.experience});cards.forEach((x,j)=>x.classList.toggle('tour-focus',j===c.card))}
+ }else{ $$('.job',sections[i]).forEach(x=>x.classList.remove('tour-focus'));construct(i) }
+ setProgrammatic();sections[i].scrollIntoView({behavior:reduced?'auto':'smooth',block:'start'});
 }
 function syncTour(){
- if(audio.paused||!tourDriving||userHasControl)return;
- const cue=cueAt(audio.currentTime);
- const cueIndex=cuePlan.indexOf(cue);
- if(cueIndex!==lastCue){lastCue=cueIndex;runCue(cue)}
+ if(audio.paused||!tourDriving||userControl)return;
+ const cue=cueAt(audio.currentTime),i=cues.indexOf(cue);
+ if(i!==lastCue){lastCue=i;runCue(cue)}
 }
 const observer=new IntersectionObserver(entries=>{
- entries.forEach(entry=>{if(!entry.isIntersecting)return;const idx=sections.indexOf(entry.target);if(idx<0)return;current=idx;markVisible(entry.target);if(!audio.paused&&tourDriving)return;construct(idx);$('#nextSection').textContent=idx===sections.length-1?'Back to Top ↑':'Next Section →'});
-},{threshold:.18});
+ entries.forEach(e=>{
+  if(!e.isIntersecting)return;const i=sections.indexOf(e.target);if(i<0)return;current=i;
+  if(!built.has(e.target)&&!(tourDriving&&!userControl))construct(i);
+  $('#nextSection').textContent=i===sections.length-1?'Back to Top ↑':'Next Section →';
+ });
+},{threshold:.2});
 sections.forEach(s=>observer.observe(s));
-$('#allSections').addEventListener('click',()=>{yieldToUser();$('#drawer').classList.toggle('open')});
-$('#closeDrawer').addEventListener('click',()=>{yieldToUser();$('#drawer').classList.remove('open')});
+$('#allSections')?.addEventListener('click',()=>{yieldControl();$('#drawer').classList.toggle('open')});
+$('#closeDrawer')?.addEventListener('click',()=>{yieldControl();$('#drawer').classList.remove('open')});
 $$('[data-jump]').forEach(b=>b.addEventListener('click',()=>go(b.dataset.jump)));
-$('#nextSection').addEventListener('click',()=>go(sections[(current+1)%sections.length].id));
-document.addEventListener('click',e=>{if(!e.target.closest('#drawer,#allSections')&&$('#drawer').classList.contains('open'))$('#drawer').classList.remove('open')});
-$$('[data-copy]').forEach(b=>b.addEventListener('click',async()=>{yieldToUser();const old=b.textContent;try{await navigator.clipboard.writeText(b.dataset.copy);b.textContent='Copied ✓'}catch{b.textContent=b.dataset.copy;b.title='Select and copy'}setTimeout(()=>b.textContent=old,1500)}));
-function showTour(){tour.classList.add('show')}
-$('#startTour').addEventListener('click',()=>{showTour();userHasControl=false;tourDriving=true;lastCue=-1;audio.play().catch(()=>{$('#tourStatus').textContent='Tap play to start · 03:22'})});
-$('#tourPlay').addEventListener('click',()=>{showTour();if(audio.paused){userHasControl=false;tourDriving=true;lastCue=-1;audio.play()}else{audio.pause();yieldToUser()}});
-$('#tourClose').addEventListener('click',()=>{audio.pause();yieldToUser();tour.classList.remove('show')});
-audio.addEventListener('play',()=>{$('#tourPlay').textContent='Ⅱ';tour.classList.add('playing');$('#tourStatus').textContent='Now playing · Puneet’s journey';if(!userHasControl)tourDriving=true;syncTour()});
-audio.addEventListener('pause',()=>{$('#tourPlay').textContent='▶';tour.classList.remove('playing');yieldToUser();if(!audio.ended)$('#tourStatus').textContent='Paused · Guided audio tour'});
-audio.addEventListener('seeking',yieldToUser);
-audio.addEventListener('timeupdate',syncTour);
-audio.addEventListener('ended',()=>{yieldToUser();$('#tourStatus').textContent='Tour complete · Replay anytime';$('#tourPlay').textContent='▶'});
-// Manual input always wins over narration-driven scrolling.
-addEventListener('wheel',()=>yieldToUser(),{passive:true});
-addEventListener('touchstart',()=>yieldToUser(),{passive:true});
-addEventListener('pointerdown',e=>{if(e.target.closest('a,button,[role=button]'))yieldToUser()},{passive:true});
-addEventListener('scroll',()=>{if(programmaticScroll)return;yieldToUser();updateCurrent()},{passive:true});
-addEventListener('keydown',e=>{
- if(['INPUT','TEXTAREA'].includes(document.activeElement.tagName))return;
- if(e.key==='Escape'){$('#drawer').classList.remove('open');yieldToUser()}
- if(['ArrowRight','PageDown'].includes(e.key)){e.preventDefault();go(sections[Math.min(sections.length-1,current+1)].id)}
- if(['ArrowLeft','PageUp'].includes(e.key)){e.preventDefault();go(sections[Math.max(0,current-1)].id)}
-});
-addEventListener('resize',()=>{if(activeBuild)stopConstruction()},{passive:true});
-// Fail-safe: content is visible even if animation code, observers, or audio fail.
+$('#nextSection')?.addEventListener('click',()=>go(sections[(current+1)%sections.length].id));
+$$('[data-copy]').forEach(b=>b.addEventListener('click',async()=>{yieldControl();const old=b.textContent;try{await navigator.clipboard.writeText(b.dataset.copy);b.textContent='Copied ✓'}catch{b.textContent=b.dataset.copy}setTimeout(()=>b.textContent=old,1400)}));
+$('#startTour')?.addEventListener('click',()=>{userControl=false;tourDriving=true;lastCue=-1;tour.classList.add('show');audio.play().catch(()=>$('#tourStatus').textContent='Tap play to start · 03:22')});
+$('#tourPlay')?.addEventListener('click',()=>{tour.classList.add('show');if(audio.paused){userControl=false;tourDriving=true;lastCue=-1;audio.play()}else{audio.pause();yieldControl()}});
+$('#tourClose')?.addEventListener('click',()=>{audio.pause();yieldControl();tour.classList.remove('show')});
+audio?.addEventListener('play',()=>{ $('#tourPlay').textContent='Ⅱ';tour.classList.add('playing');if(!userControl)tourDriving=true;syncTour()});
+audio?.addEventListener('pause',()=>{$('#tourPlay').textContent='▶';tour.classList.remove('playing');yieldControl()});
+audio?.addEventListener('seeking',yieldControl);audio?.addEventListener('timeupdate',syncTour);
+audio?.addEventListener('ended',()=>{yieldControl();$('#tourStatus').textContent='Tour complete · Replay anytime'});
+addEventListener('wheel',yieldControl,{passive:true});addEventListener('touchstart',yieldControl,{passive:true});
+addEventListener('pointerdown',e=>{if(e.target.closest('a,button,[role=button]'))yieldControl()},{passive:true});
+addEventListener('scroll',()=>{if(programmatic)return;yieldControl();let best=0,d=Infinity;sections.forEach((s,i)=>{const n=Math.abs(s.getBoundingClientRect().top-70);if(n<d){d=n;best=i}});current=best},{passive:true});
+addEventListener('keydown',e=>{if(['INPUT','TEXTAREA'].includes(document.activeElement.tagName))return;if(e.key==='Escape'){yieldControl();$('#drawer').classList.remove('open')}});
+addEventListener('resize',cancel,{passive:true});
+sections.forEach(s=>setTimeout(()=>revealAll(s),3200));
 construct(0);
 })();
 </script>
