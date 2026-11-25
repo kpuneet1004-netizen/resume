@@ -213,7 +213,7 @@ function syncTour(){
  if(cueIndex!==lastCue){lastCue=cueIndex;runCue(cue)}
 }
 const observer=new IntersectionObserver(entries=>{
- entries.forEach(entry=>{if(!entry.isIntersecting)return;const idx=sections.indexOf(entry.target);if(idx<0)return;current=idx;markVisible(entry.target);if(!audio.paused&&!tourDriving)return;if(!userHasControl)construct(idx);$('#nextSection').textContent=idx===sections.length-1?'Back to Top ↑':'Next Section →'});
+ entries.forEach(entry=>{if(!entry.isIntersecting)return;const idx=sections.indexOf(entry.target);if(idx<0)return;current=idx;markVisible(entry.target);if(!audio.paused&&tourDriving)return;construct(idx);$('#nextSection').textContent=idx===sections.length-1?'Back to Top ↑':'Next Section →'});
 },{threshold:.18});
 sections.forEach(s=>observer.observe(s));
 $('#allSections').addEventListener('click',()=>{yieldToUser();$('#drawer').classList.toggle('open')});
