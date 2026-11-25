@@ -117,6 +117,8 @@ function sweep(el,run){
  return {x:r.left+r.width*.5,y:r.top+r.height*.5};
 }
 function cancel(){
+ // Never leave interrupted construction targets hidden after manual input or a section change.
+ sections.forEach(section=>{if(section.querySelector('.reveal.building'))revealAll(section)});
  token++;active.forEach(c=>c.remove());active=[];
  layer.querySelectorAll('.construction-line,.spark').forEach(n=>n.remove());
 }
@@ -193,7 +195,20 @@ addEventListener('pointerdown',e=>{if(e.target.closest('a,button,[role=button]')
 addEventListener('scroll',()=>{if(programmatic)return;yieldControl();let best=0,d=Infinity;sections.forEach((s,i)=>{const n=Math.abs(s.getBoundingClientRect().top-70);if(n<d){d=n;best=i}});current=best},{passive:true});
 addEventListener('keydown',e=>{if(['INPUT','TEXTAREA'].includes(document.activeElement.tagName))return;if(e.key==='Escape'){yieldControl();$('#drawer').classList.remove('open')}});
 addEventListener('resize',cancel,{passive:true});
-construct(0);
+function startAtWelcome(){
+ // A deterministic entry state: the resume always opens at section 01.
+ if(location.hash!=='#welcome')history.replaceState(null,'',location.pathname+location.search+'#welcome');
+ window.scrollTo({top:0,left:0,behavior:'auto'});
+ current=0;
+ const next=$('#nextSection');if(next)next.textContent='Next Section →';
+ construct(0);
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',startAtWelcome,{once:true});
+else startAtWelcome();
+window.addEventListener('load',()=>{if(current===0&&scrollY<80)construct(0)},{once:true});
+// Global hard stop: even a missed observer, cancelled animation, or failed cursor
+// must never leave any section or reveal target at opacity zero.
+setTimeout(()=>sections.forEach(revealAll),1100);
 })();
 </script>
 </body></html>
