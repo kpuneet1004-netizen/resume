@@ -50,7 +50,7 @@ main{padding:0 clamp(18px,5vw,76px)}.section{position:relative;min-height:100svh
 .construction-line.sweep-fade{opacity:0}
 .construction-line path{transition:stroke-dashoffset .35s cubic-bezier(.2,.75,.2,1)}
 .reveal{opacity:1;transform:none;transition:opacity .3s ease,transform .3s ease}
-.reveal.building{opacity:0!important;transform:translateY(10px)!important}
+.reveal.building{opacity:1!important;transform:translateY(10px)!important}
 .reveal.building.in{opacity:1!important;transform:none!important}
 .reveal.constructed{box-shadow:none!important}
 .section-built .reveal{opacity:1;transform:none}
@@ -130,7 +130,7 @@ function construct(index,opts={}){
  if(!targets.length){revealAll(section);return}
  const cursors=crew.slice(0,4).map(cursor);active=cursors;
  targets.forEach((el,i)=>{
-  el.classList.remove('in');el.classList.add('building');el.style.opacity='0';el.style.transform='translateY(10px)';
+  el.classList.remove('in');el.classList.add('building');el.style.opacity='1';el.style.transform='translateY(10px)';
   const c=cursors[i%cursors.length];
   setTimeout(()=>{
    if(run!==token)return;
@@ -146,7 +146,7 @@ function construct(index,opts={}){
   setTimeout(()=>{if(run!==token)return;cursors.forEach(c=>c.remove());active=[]},420);
  },total);
  // Hard visibility fallback for elements outside the choreography or a failed animation.
- setTimeout(()=>{if(run===token)revealAll(section)},2600);
+ setTimeout(()=>{if(run===token)revealAll(section)},1000);
  built.add(section);
 }
 function yieldControl(){userControl=true;tourDriving=false;cancel()}
@@ -203,12 +203,15 @@ function startAtWelcome(){
  const next=$('#nextSection');if(next)next.textContent='Next Section →';
  construct(0);
 }
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',startAtWelcome,{once:true});
-else startAtWelcome();
-// The DOMContentLoaded boot above is the only initial construction trigger.
-// Do not restart the animation on window.load (late fonts/media can fire much later).
-// Global hard stop: force every target visible within 1.1s, independent of observers.
-setTimeout(()=>sections.forEach(revealAll),1100);
+let booted=false;
+function boot(){if(booted)return;booted=true;startAtWelcome()}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});
+else boot();
+// load is a secondary boot guarantee; it never restarts a completed/active sweep.
+addEventListener('load',boot,{once:true});
+// Global hard stop: all reveal targets become visibly rendered within 1.1s,
+// even if IntersectionObserver, DOM readiness, or a construction callback fails.
+setTimeout(()=>{sections.forEach(revealAll);const n=$('#nextSection');if(n)n.textContent='Next Section →';if(location.hash!=='#welcome')history.replaceState(null,'',location.pathname+location.search+'#welcome');window.scrollTo({top:0,left:0,behavior:'auto'});},1100);
 })();
 </script>
 </body></html>
