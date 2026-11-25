@@ -100,7 +100,7 @@ $('#audioClose').addEventListener('click',()=>{audio.pause();player.classList.re
 audio.addEventListener('play',()=>{$('#audioToggle').textContent='Ⅱ';$('#audioStatus').textContent='Now playing · Puneet’s journey'});
 audio.addEventListener('pause',()=>{$('#audioToggle').textContent='▶';if(!audio.ended)$('#audioStatus').textContent='Tour paused'});
 audio.addEventListener('loadedmetadata',()=>{$('#audioProgress').max=audio.duration||202});
-audio.addEventListener('timeupdate',()=>{$('#audioProgress').value=audio.currentTime;const cues=[0,15,40,55,80,97,130,164],ids=['home','about','experience','experience','experience','education','venture','contact'];let i=0;for(let j=0;j<cues.length;j++)if(audio.currentTime>=cues[j])i=j;const target=sections.findIndex(s=>s.id===ids[i]);if(target>=0&&current!==target){current=target;build(target);sections[target].scrollIntoView({behavior:reduced?'auto':'smooth',block:'start')}}});
+audio.addEventListener('timeupdate',()=>{$('#audioProgress').value=audio.currentTime;const cues=[0,15,40,55,80,97,130,164],ids=['home','about','experience','experience','experience','education','venture','contact'];let i=0;for(let j=0;j<cues.length;j++)if(audio.currentTime>=cues[j])i=j;const target=sections.findIndex(s=>s.id===ids[i]);if(target>=0&&current!==target){current=target;build(target);sections[target].scrollIntoView({behavior:reduced?'auto':'smooth',block:'start'})}});
 $('#audioProgress').addEventListener('input',()=>{audio.currentTime=Number($('#audioProgress').value)});
 audio.addEventListener('error',()=>{audioError.classList.add('show');$('#audioStatus').textContent='Audio file unavailable in this deployment'});
 addEventListener('resize',()=>{if(active){clearActive();status.classList.remove('show')}},{passive:true});
