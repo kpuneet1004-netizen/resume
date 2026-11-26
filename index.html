@@ -30,6 +30,10 @@ main{padding-top:76px}.section{position:relative;padding:118px 0 112px;scroll-ma
 .reveal{opacity:0;transform:translateY(18px);transition:opacity .65s var(--ease),transform .65s var(--ease)}.reveal.is-visible{opacity:1;transform:none}.section.is-built .reveal{opacity:1;transform:none}.constructed{border-color:rgba(255,107,26,.42)!important;box-shadow:0 0 0 1px rgba(255,107,26,.08),0 14px 50px rgba(255,107,26,.035)}
 
 /* Live construction sequence */
+.section.constructing.stage-type .section-head.reveal,.section.constructing.stage-type .hero-copy.reveal{opacity:1;transform:none}
+.section.constructing .section-head h2,.section.constructing .hero h1{animation:none;clip-path:none}
+.section.constructing.stage-type .section-head h2,.section.constructing.stage-type .hero h1{clip-path:inset(0 100% 0 0);animation:headline-type .52s steps(28,end) forwards}
+
 .section{isolation:isolate}
 .section.constructing{--build-accent:var(--orange)}
 .section.constructing:after{content:"";position:absolute;inset:clamp(12px,2vw,26px) max(18px,calc((100% - var(--page))/2)) auto;height:calc(100% - 48px);border:1px solid rgba(255,107,26,.5);border-radius:16px;pointer-events:none;z-index:0;clip-path:inset(0 100% 0 0);animation:frame-draw .42s cubic-bezier(.2,.75,.2,1) forwards}
